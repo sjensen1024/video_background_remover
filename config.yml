@@ -1,0 +1,6 @@
+original_frames_directory: './../original_frames'
+transparent_frames_directory: './../transparent_frames'
+input_file: './../source_video.mp4'
+output_file: './../result.mp4'
+should_save_original_frames: true
+should_save_transparent_frames: false
