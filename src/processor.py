@@ -19,5 +19,5 @@ class Processor:
         #  5) Add an option to add a background color/image to each frame (ex: green screen instead of black screen).
         #  6) Ensure we capture all the dependencies.
         print('Starting the process.')
-        self.project_cleaner.clean()
+        self.project_cleaner.clean_current_workspace()
         print('Process finished!')
