@@ -7,11 +7,11 @@ class ProjectCleaner:
         self.result_output_file_name = result_output_file_name
 
     def clean_current_workspace(self):
-        print('Start the process of cleaning the project.')
+        print('Start the process of cleaning the current workspace.')
         self.__clean_original_frames_directory()
         self.__clean_transparent_frames_directory()
         self.__clean_result_output()
-        print('Finished the process of cleaning the current project.')
+        print('Finished the process of cleaning the current workspace.')
 
     def __clean_original_frames_directory(self):
         self.__clean_all_files_in_directory(self.original_frames_directory_name)
