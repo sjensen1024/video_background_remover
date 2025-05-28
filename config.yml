@@ -1,6 +1,6 @@
 original_frames_directory: './current_workspace/original_frames'
 transparent_frames_directory: './current_workspace/transparent_frames'
-input_file: './current_workspace/source_video.mp4'
+input_file: './current_workspace/source.mp4'
 output_file: './current_workspace/result.mp4'
 should_save_original_frames: true
 should_save_transparent_frames: false

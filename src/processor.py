@@ -1,5 +1,7 @@
+import moviepy
 from src.config_manager import ConfigManager
 from src.project_cleaner import ProjectCleaner
+from src.video_frame_extractor import VideoFrameExtractor
 from definitions import ROOT_DIR
 
 class Processor:
@@ -21,4 +23,7 @@ class Processor:
         print('Root directory: ' + ROOT_DIR)
         print('Starting the process.')
         self.project_cleaner.clean_current_workspace()
+        source_video = moviepy.VideoFileClip(self.config_manager.get_input_file())
+        extracted_frame_info = VideoFrameExtractor(source_video).get_extracted_info()
+        print(str(extracted_frame_info.get('total_frames')) + ' frames extracted.')
         print('Process finished!')
