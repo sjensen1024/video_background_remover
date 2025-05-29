@@ -12,11 +12,9 @@ class VideoFrameExtractor:
             'total_frames': self.video.n_frames,
             'frames': []
         }
-        count = 0
-        for frame in self.video.iter_frames():
-            count += 1
+        for index, frame in enumerate(self.video.iter_frames()):
             frame_info = {
-                'file_name': self.__get_frame_file_name(count),
+                'file_name': self.__get_frame_file_name(index + 1),
                 'image': self.__get_frame_as_image(frame)
             }
             info['frames'].append(frame_info)
