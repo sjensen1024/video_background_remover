@@ -1,5 +1,6 @@
 import unittest
 import moviepy
+import PIL
 from src.video_frame_extractor import VideoFrameExtractor
 from definitions import ROOT_DIR
 
@@ -24,6 +25,7 @@ class TestProjectCleaner(unittest.TestCase):
         for index, file_name in enumerate(self.__expected_file_names_for_25_frames()):
             frame_to_check = frames[index]
             self.assertEqual(frame_to_check.get('file_name'), file_name)
+            self.assertTrue(isinstance(frame_to_check.get('image'), PIL.Image.Image))
 
     def __expected_file_names_for_9_frames(self):
         return [
