@@ -12,23 +12,23 @@ class TestProjectCleaner(unittest.TestCase):
 
     def test_initialized_with_default_response_values(self):
         project_cleaner = ProjectCleaner()
-        self.assert_new_project_cleaner_has_default_status(project_cleaner)
+        self.__assert_new_project_cleaner_has_default_status(project_cleaner)
 
     def test_when_workspace_directory_does_not_exist(self):
         project_cleaner = self.__setup_test_project_cleaner('some_directory_that_does_not_exist')
-        self.assert_new_project_cleaner_has_default_status(project_cleaner)
+        self.__assert_new_project_cleaner_has_default_status(project_cleaner)
         project_cleaner.clean_current_workspace()
-        self.assert_project_cleaner_status_shows_no_directories_or_files_exist(project_cleaner)
+        self.__assert_project_cleaner_status_shows_no_directories_or_files_exist(project_cleaner)
 
     def test_when_workspace_directory_exists_but_contains_no_files_or_directories(self):
         project_cleaner = self.__setup_test_project_cleaner('no_directories')
-        self.assert_new_project_cleaner_has_default_status(project_cleaner)
+        self.__assert_new_project_cleaner_has_default_status(project_cleaner)
         project_cleaner.clean_current_workspace()
-        self.assert_project_cleaner_status_shows_no_directories_or_files_exist(project_cleaner)
+        self.__assert_project_cleaner_status_shows_no_directories_or_files_exist(project_cleaner)
 
     def test_when_workspace_directory_contains_directories_but_no_files(self):
         project_cleaner = self.__setup_test_project_cleaner('no_files')
-        self.assert_new_project_cleaner_has_default_status(project_cleaner)
+        self.__assert_new_project_cleaner_has_default_status(project_cleaner)
         project_cleaner.clean_current_workspace()
         self.assertEquals(
             project_cleaner.get_status(),
@@ -41,7 +41,7 @@ class TestProjectCleaner(unittest.TestCase):
 
     def test_when_workspace_directory_contains_directories_and_files(self):
        project_cleaner = self.__setup_test_project_cleaner('has_files_and_directories')
-       self.assert_new_project_cleaner_has_default_status(project_cleaner)
+       self.__assert_new_project_cleaner_has_default_status(project_cleaner)
        project_cleaner.clean_current_workspace()
        self.assertEquals(
             project_cleaner.get_status(),
@@ -53,7 +53,7 @@ class TestProjectCleaner(unittest.TestCase):
         )
        self.__repopulate_has_files_and_directories_workspace()
 
-    def assert_new_project_cleaner_has_default_status(self, new_project_cleaner):
+    def __assert_new_project_cleaner_has_default_status(self, new_project_cleaner):
         self.assertEquals(
             new_project_cleaner.get_status(),
             {
@@ -63,7 +63,7 @@ class TestProjectCleaner(unittest.TestCase):
             }
         )
 
-    def assert_project_cleaner_status_shows_no_directories_or_files_exist(self, project_cleaner):
+    def __assert_project_cleaner_status_shows_no_directories_or_files_exist(self, project_cleaner):
         self.assertEquals(
             project_cleaner.get_status(),
             {
