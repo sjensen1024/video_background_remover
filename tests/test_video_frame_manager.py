@@ -5,18 +5,22 @@ import PIL
 from src.video_frame_manager import VideoFrameManager
 from definitions import ROOT_DIR
 
+# TODO: Come up with a good way to mock rembg remove that effectively tests that the manager does what we want it to do.
+
 class TestProjectCleaner(unittest.TestCase):
     def test_new_video_frame_manager_when_video_has_single_digit_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
         video_frame_manager = VideoFrameManager(video)
         self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
         self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frame_info(),  self.__expected_file_names_for_9_frames())
+        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frame_info(),  self.__expected_file_names_for_9_frames())
 
     def test_new_video_frame_manager_when_video_has_more_than_single_digit_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\result.mp4')
         video_frame_manager = VideoFrameManager(video)
         self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
         self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frame_info(),  self.__expected_file_names_for_25_frames())
+        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frame_info(),  self.__expected_file_names_for_25_frames())
 
     def test_save_original_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
@@ -24,6 +28,13 @@ class TestProjectCleaner(unittest.TestCase):
         PIL.Image.Image.save = MagicMock(name='mock_image_save')
         video_frame_manager.save_original_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\original_frames')
         assert all(frame_info.get('image_saved') == True for frame_info in video_frame_manager.get_original_frame_info())
+
+    def test_save_transparent_frames(self):
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager(video)
+        PIL.Image.Image.save = MagicMock(name='mock_image_save')
+        video_frame_manager.save_transparent_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\transparent_frames')
+        assert all(frame_info.get('image_saved') == True for frame_info in video_frame_manager.get_transparent_frame_info())
 
     def __assert_original_video_is_instance_of_correct_class(self, video_frame_manager):
         self.assertTrue(isinstance(video_frame_manager.get_original_video(), moviepy.video.io.VideoFileClip.VideoFileClip))

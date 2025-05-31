@@ -20,6 +20,7 @@ class Processor:
         #  3) Convert the frames into an image sequence and output it as a video result.
         #  4) Add an option to add a background color/image to each frame (ex: green screen instead of black screen).
         #  5) Ensure we capture all the dependencies.
+        #  6) Set up the current workspace file removal process to ignore .keep files. 
         print('Root directory: ' + ROOT_DIR)
         print('Starting the process.')
         self.project_cleaner.clean_current_workspace()
@@ -27,4 +28,6 @@ class Processor:
         video_frame_manager = VideoFrameManager(source_video)
         if self.config_manager.get_should_save_original_frames():
             video_frame_manager.save_original_frames(self.config_manager.get_original_frames_directory())
+        if self.config_manager.get_should_save_transparent_frames():
+            video_frame_manager.save_transparent_frames(self.config_manager.get_transparent_frames_directory())
         print('Process finished!')
