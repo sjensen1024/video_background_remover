@@ -17,19 +17,17 @@ class VideoFrameManager:
     def get_transparent_frame_info(self):
         return self.transparent_frame_info
     
-    # TODO: Consolidate these two methods. They basically do the same thing, just with different images.
     def save_original_frames(self, frame_directory_path):
-        for index, frame_info in enumerate(self.original_frame_info):
-            file_path = frame_directory_path + '\\' + frame_info.get('file_name')
-            frame_info.get('image').save(file_path)
-            self.original_frame_info[index]['image_saved'] = True
-            print ('Saved ' + file_path)
+        self.__save_frames(frame_directory_path, self.original_frame_info)
 
     def save_transparent_frames(self, frame_directory_path):
-        for index, frame_info in enumerate(self.transparent_frame_info):
+        self.__save_frames(frame_directory_path, self.transparent_frame_info)
+
+    def __save_frames(self, frame_directory_path, frame_info_set):
+        for index, frame_info in enumerate(frame_info_set):
             file_path = frame_directory_path + '\\' + frame_info.get('file_name')
             frame_info.get('image').save(file_path)
-            self.transparent_frame_info[index]['image_saved'] = True
+            frame_info_set[index]['image_saved'] = True
             print ('Saved ' + file_path)
 
     def __extract_original_frame_info(self):

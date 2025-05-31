@@ -16,11 +16,10 @@ class Processor:
     def process(self):
         # TODO: Implement and test the following:
         #  1) Fix the config manager so that it sets up the paths relative to the root path
-        #  2) Remove the backgrounds from the frames and save the resulting images if the config says we should.
-        #  3) Convert the frames into an image sequence and output it as a video result.
-        #  4) Add an option to add a background color/image to each frame (ex: green screen instead of black screen).
-        #  5) Ensure we capture all the dependencies.
-        #  6) Set up the current workspace file removal process to ignore .keep files. 
+        #  2) Convert the frames into an image sequence and output it as a video result.
+        #  3) Add an option to add a background color/image to each frame (ex: green screen instead of black screen).
+        #  4) Ensure we capture all the dependencies.
+        #  5) Set up the current workspace file removal process to ignore .keep files. 
         print('Root directory: ' + ROOT_DIR)
         print('Starting the process.')
         self.project_cleaner.clean_current_workspace()

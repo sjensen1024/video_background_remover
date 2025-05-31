@@ -2,10 +2,9 @@ import unittest
 from unittest.mock import MagicMock
 import moviepy
 import PIL
+from rembg import remove
 from src.video_frame_manager import VideoFrameManager
 from definitions import ROOT_DIR
-
-# TODO: Come up with a good way to mock rembg remove that effectively tests that the manager does what we want it to do.
 
 class TestProjectCleaner(unittest.TestCase):
     def test_new_video_frame_manager_when_video_has_single_digit_frames(self):
