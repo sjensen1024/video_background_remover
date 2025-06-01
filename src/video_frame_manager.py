@@ -23,6 +23,9 @@ class VideoFrameManager:
     def save_transparent_frames(self, frame_directory_path):
         self.__save_frames(frame_directory_path, self.transparent_frame_info)
 
+    # TODO: Instead of using a key value pair,
+    #       make a class for info on an individual frame and do the save there.
+    #       That way we don't bloat our tests with a bunch of saves and background removal calls.
     def __save_frames(self, frame_directory_path, frame_info_set):
         for index, frame_info in enumerate(frame_info_set):
             file_path = frame_directory_path + '\\' + frame_info.get('file_name')

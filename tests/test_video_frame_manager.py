@@ -6,7 +6,7 @@ from rembg import remove
 from src.video_frame_manager import VideoFrameManager
 from definitions import ROOT_DIR
 
-class TestProjectCleaner(unittest.TestCase):
+class TestVideoFrameManager(unittest.TestCase):
     def test_new_video_frame_manager_when_video_has_single_digit_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
         video_frame_manager = VideoFrameManager(video)
