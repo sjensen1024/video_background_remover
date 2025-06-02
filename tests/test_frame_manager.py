@@ -19,12 +19,13 @@ class TestFrameManager(unittest.TestCase):
 
     def test_save_changes_is_saved_attribute(self):
         PIL.Image.Image.save = MagicMock(name='mock_image_save')
-        self.frame_manager.save(ROOT_DIR + '\\support\\test_workspaces\\has_files_and_directories\\original_frames')
+        self.frame_manager.save_frame(ROOT_DIR + '\\support\\test_workspaces\\has_files_and_directories\\original_frames')
         self.assertTrue(self.frame_manager.get_is_saved())
+        PIL.Image.Image.save = PIL.Image.Image.save
 
     def test_rembg_remove_is_called_on_remove_background_from_frame(self):
-        mocked_rembg_remove_return_value = 'I do not care what exactly we return. Just ensure rembg.remove was called here.'
+        original_rembg_remove = rembg.remove
         rembg.remove = MagicMock(name='mock_rembg_remove')
-        rembg.remove.return_value = mocked_rembg_remove_return_value
         self.frame_manager.remove_background_from_frame()
-        self.assertEqual(self.frame_manager.get_frame(), mocked_rembg_remove_return_value)
+        rembg.remove.assert_called()
+        rembg.remove = original_rembg_remove

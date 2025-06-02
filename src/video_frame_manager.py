@@ -1,63 +1,53 @@
 from PIL import Image 
 from rembg import remove
 import numpy
+from src.frame_manager import FrameManager
 
+# TODO: Rename this class and rework its tests so that it doesn't duplicate the tests for what FrameManager is doing.
 class VideoFrameManager:
     def __init__(self, original_video):
         self.original_video = original_video
-        self.original_frame_info = self.__extract_original_frame_info()
-        self.transparent_frame_info = self. __setup_transparent_frame_info()
+        self.original_frames = self.__extract_original_frame_info()
+        self.transparent_frames = self. __setup_transparent_frame_info()
     
     def get_original_video(self):
         return self.original_video
     
-    def get_original_frame_info(self):
-        return self.original_frame_info
+    def get_original_frames(self):
+        return self.original_frames
     
-    def get_transparent_frame_info(self):
-        return self.transparent_frame_info
+    def get_transparent_frames(self):
+        return self.transparent_frames
     
     def save_original_frames(self, frame_directory_path):
-        self.__save_frames(frame_directory_path, self.original_frame_info)
+        self.__save_frames(frame_directory_path, self.original_frames)
 
     def save_transparent_frames(self, frame_directory_path):
-        self.__save_frames(frame_directory_path, self.transparent_frame_info)
+        self.__save_frames(frame_directory_path, self.transparent_frames)
 
-    # TODO: Instead of using a key value pair,
-    #       make a class for info on an individual frame and do the save there.
-    #       That way we don't bloat our tests with a bunch of saves and background removal calls.
-    def __save_frames(self, frame_directory_path, frame_info_set):
-        for index, frame_info in enumerate(frame_info_set):
-            file_path = frame_directory_path + '\\' + frame_info.get('file_name')
-            frame_info.get('image').save(file_path)
-            frame_info_set[index]['image_saved'] = True
-            print ('Saved ' + file_path)
+    def __save_frames(self, frame_directory_path, frames):
+        for frame in frames:
+            frame.save_frame(frame_directory_path)
 
     def __extract_original_frame_info(self):
         print('Extracting original frames from video.')
-        frame_info_set = []
+        frames = []
         for index, frame in enumerate(self.original_video.iter_frames()):
-            frame_info = {
-                'file_name': self.__get_frame_file_name(index + 1),
-                'image': self.__get_frame_as_image(frame),
-                'image_saved': False
-            }
-            frame_info_set.append(frame_info)
+            frame_file_name = self.__get_frame_file_name(index + 1)
+            frame_manager = FrameManager(frame_file_name, frame)
+            frames.append(frame_manager)
         print(str(self.original_video.n_frames) + ' frames extracted.')
-        return frame_info_set
+        return frames
     
     def __setup_transparent_frame_info(self):
         print('Setting up transparent versions of the frames')
-        transparent_frame_info_set = []
-        for index, original_frame_info in enumerate(self.original_frame_info):
-            transparent_frame_info = {
-                'file_name': original_frame_info.get('file_name'),
-                'image': remove(original_frame_info.get('image')),
-                'image_saved': False
-            }
-            transparent_frame_info_set.append(transparent_frame_info)
-            print('Extracted background from ' + original_frame_info.get('file_name'))
-        return transparent_frame_info_set
+        frames = []
+        for original_frame_info in self.original_frames:
+            frame_manager = FrameManager(original_frame_info.get_file_name(), original_frame_info.get_frame())
+            frame_manager.remove_background_from_frame()
+            frames.append(frame_manager)
+            print('Extracted background from ' + frame_manager.get_file_name())
+        return frames
     
     def __get_frame_file_name(self, current_frame_count):
         file_name = '_'
@@ -70,6 +60,3 @@ class VideoFrameManager:
 
     def __get_number_of_digits(self, number):
         return len(str(abs(number)))
-    
-    def __get_frame_as_image(self, frame):
-        return Image.fromarray(numpy.uint8(frame))

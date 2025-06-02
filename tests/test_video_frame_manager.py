@@ -11,29 +11,29 @@ class TestVideoFrameManager(unittest.TestCase):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
         video_frame_manager = VideoFrameManager(video)
         self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frame_info(),  self.__expected_file_names_for_9_frames())
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frame_info(),  self.__expected_file_names_for_9_frames())
+        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frames(),  self.__expected_file_names_for_9_frames())
+        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frames(),  self.__expected_file_names_for_9_frames())
 
     def test_new_video_frame_manager_when_video_has_more_than_single_digit_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\result.mp4')
         video_frame_manager = VideoFrameManager(video)
         self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frame_info(),  self.__expected_file_names_for_25_frames())
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frame_info(),  self.__expected_file_names_for_25_frames())
+        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frames(),  self.__expected_file_names_for_25_frames())
+        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frames(),  self.__expected_file_names_for_25_frames())
 
     def test_save_original_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
         video_frame_manager = VideoFrameManager(video)
         PIL.Image.Image.save = MagicMock(name='mock_image_save')
         video_frame_manager.save_original_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\original_frames')
-        assert all(frame_info.get('image_saved') == True for frame_info in video_frame_manager.get_original_frame_info())
+        assert all(frame_info.get_is_saved() == True for frame_info in video_frame_manager.get_original_frames())
 
     def test_save_transparent_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
         video_frame_manager = VideoFrameManager(video)
         PIL.Image.Image.save = MagicMock(name='mock_image_save')
         video_frame_manager.save_transparent_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\transparent_frames')
-        assert all(frame_info.get('image_saved') == True for frame_info in video_frame_manager.get_transparent_frame_info())
+        assert all(frame_info.get_is_saved() == True for frame_info in video_frame_manager.get_transparent_frames())
 
     def __assert_original_video_is_instance_of_correct_class(self, video_frame_manager):
         self.assertTrue(isinstance(video_frame_manager.get_original_video(), moviepy.video.io.VideoFileClip.VideoFileClip))
@@ -41,9 +41,9 @@ class TestVideoFrameManager(unittest.TestCase):
     def __assert_frame_info_is_set_up_correctly(self, frame_info, expected_frame_file_names):
         for index, file_name in enumerate(expected_frame_file_names):
             frame_to_check = frame_info[index]
-            self.assertEqual(frame_to_check.get('file_name'), file_name)
-            self.assertTrue(isinstance(frame_to_check.get('image'), PIL.Image.Image))
-            self.assertFalse(frame_to_check.get('image_saved'))
+            self.assertEqual(frame_to_check.get_file_name(), file_name)
+            self.assertTrue(isinstance(frame_to_check.get_frame(), PIL.Image.Image))
+            self.assertFalse(frame_to_check.get_is_saved())
 
     def __expected_file_names_for_9_frames(self):
         return [

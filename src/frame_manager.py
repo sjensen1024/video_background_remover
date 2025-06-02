@@ -17,9 +17,11 @@ class FrameManager:
     def get_is_saved(self):
         return self.is_saved
     
-    def save(self, directory):
-        self.frame.save(directory + '\\' + self.file_name)
+    def save_frame(self, directory):
+        file_path = directory + '\\' + self.file_name
+        self.frame.save(file_path)
         self.is_saved = True
+        print ('Saved frame ' + file_path)
 
     def remove_background_from_frame(self):
         self.frame = rembg.remove(self.frame)
