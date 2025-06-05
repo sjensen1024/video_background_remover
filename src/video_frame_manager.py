@@ -1,9 +1,5 @@
-from PIL import Image 
-from rembg import remove
-import numpy
 from src.frame_manager import FrameManager
 
-# TODO: Rename this class and rework its tests so that it doesn't duplicate the tests for what FrameManager is doing.
 class VideoFrameManager:
     def __init__(self, original_video):
         self.original_video = original_video

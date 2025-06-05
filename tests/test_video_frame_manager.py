@@ -4,46 +4,57 @@ import moviepy
 import PIL
 from rembg import remove
 from src.video_frame_manager import VideoFrameManager
+from src.frame_manager import FrameManager
 from definitions import ROOT_DIR
 
 class TestVideoFrameManager(unittest.TestCase):
-    def test_new_video_frame_manager_when_video_has_single_digit_frames(self):
-        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
-        video_frame_manager = VideoFrameManager(video)
-        self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frames(),  self.__expected_file_names_for_9_frames())
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frames(),  self.__expected_file_names_for_9_frames())
+    def setUp(self):
+       self.original_save_frame_call = FrameManager.save_frame
+       self.original_remove_background_from_frame_call = FrameManager.remove_background_from_frame
+       FrameManager.save_frame = MagicMock(name='mock_frame_manager_save_frame')
+       FrameManager.remove_background_from_frame = MagicMock(name='mock_frame_manager_remove_background_from_frame')
 
-    def test_new_video_frame_manager_when_video_has_more_than_single_digit_frames(self):
+    def tearDown(self):
+        FrameManager.save_frame = self.original_save_frame_call
+        FrameManager.remove_background_from_frame = self.original_remove_background_from_frame_call
+
+    def test_suite_for_video_with_single_digit_number_of_frames(self):
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        self.__run_test_suite_for_video(video, self.__expected_file_names_for_9_frames())
+
+    def test_suite_for_video_with_more_than_single_digit_number_of_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\result.mp4')
+        self.__run_test_suite_for_video(video, self.__expected_file_names_for_25_frames())
+
+    def __run_test_suite_for_video(self, video, expected_file_names_in_sets):
         video_frame_manager = VideoFrameManager(video)
         self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_original_frames(),  self.__expected_file_names_for_25_frames())
-        self.__assert_frame_info_is_set_up_correctly(video_frame_manager.get_transparent_frames(),  self.__expected_file_names_for_25_frames())
-
-    def test_save_original_frames(self):
-        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
-        video_frame_manager = VideoFrameManager(video)
-        PIL.Image.Image.save = MagicMock(name='mock_image_save')
+        self.__assert_set_contains_frame_managers_with_expected_file_names(
+            video_frame_manager.get_original_frames(),  
+            expected_file_names_in_sets
+        )
+        self.__assert_set_contains_frame_managers_with_expected_file_names(
+            video_frame_manager.get_transparent_frames(),  
+            expected_file_names_in_sets
+        )
+        self.__assert_method_was_called_for_frames_in_set(FrameManager.remove_background_from_frame, video_frame_manager.get_transparent_frames())
         video_frame_manager.save_original_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\original_frames')
-        assert all(frame_info.get_is_saved() == True for frame_info in video_frame_manager.get_original_frames())
-
-    def test_save_transparent_frames(self):
-        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
-        video_frame_manager = VideoFrameManager(video)
-        PIL.Image.Image.save = MagicMock(name='mock_image_save')
+        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.get_original_frames())
+        FrameManager.save_frame.call_count = 0
         video_frame_manager.save_transparent_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\transparent_frames')
-        assert all(frame_info.get_is_saved() == True for frame_info in video_frame_manager.get_transparent_frames())
+        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.get_transparent_frames())
 
     def __assert_original_video_is_instance_of_correct_class(self, video_frame_manager):
-        self.assertTrue(isinstance(video_frame_manager.get_original_video(), moviepy.video.io.VideoFileClip.VideoFileClip))
+        self.assertIsInstance(video_frame_manager.get_original_video(), moviepy.video.io.VideoFileClip.VideoFileClip)
 
-    def __assert_frame_info_is_set_up_correctly(self, frame_info, expected_frame_file_names):
-        for index, file_name in enumerate(expected_frame_file_names):
-            frame_to_check = frame_info[index]
-            self.assertEqual(frame_to_check.get_file_name(), file_name)
-            self.assertTrue(isinstance(frame_to_check.get_frame(), PIL.Image.Image))
-            self.assertFalse(frame_to_check.get_is_saved())
+    def __assert_set_contains_frame_managers_with_expected_file_names(self, set_to_check, expected_file_names):
+        for index, file_name in enumerate(expected_file_names):
+            element_in_set = set_to_check[index]
+            self.assertIsInstance(element_in_set, FrameManager)
+            self.assertEqual(element_in_set.get_file_name(), file_name)
+
+    def __assert_method_was_called_for_frames_in_set(self, method_called, frame_set):
+        self.assertEqual(method_called.call_count, len(frame_set))
 
     def __expected_file_names_for_9_frames(self):
         return [
