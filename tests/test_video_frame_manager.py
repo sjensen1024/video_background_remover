@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
 import moviepy
-import PIL
-from rembg import remove
 from src.video_frame_manager import VideoFrameManager
 from src.frame_manager import FrameManager
 from definitions import ROOT_DIR
@@ -97,3 +95,4 @@ class TestVideoFrameManager(unittest.TestCase):
                     '_24.png',
                     '_25.png'
                 ]
+    
