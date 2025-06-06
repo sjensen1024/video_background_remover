@@ -67,9 +67,7 @@ class ProjectCleaner:
             self.__set_status_result_for_directory(directory, self.__status_messages().get('directory_is_empty'))
             return
         
-        for file_name in existing_file_names:
-           self.__delete_file_from_directory(file_name, directory)
-        
+        [self.__delete_file_from_directory(file_name, directory) for file_name in existing_file_names]
         self.__set_status_result_for_directory(directory, self.__status_messages().get('success'))
 
     def __set_status_result_for_directory(self, directory, result_message):

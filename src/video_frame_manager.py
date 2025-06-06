@@ -37,28 +37,35 @@ class VideoFrameManager:
         transparent_sequence.write_videofile(result_video_path)
 
     def __save_frames(self, frame_directory_path, frames):
-        for frame in frames:
-            frame.save_frame(frame_directory_path)
+        [frame.save_frame(frame_directory_path) for frame in frames]
 
     def __extract_original_frame_info(self):
         print('Extracting original frames from video.')
         frames = []
         for index, frame in enumerate(self.original_video.iter_frames()):
-            frame_file_name = self.__get_frame_file_name(index + 1)
-            frame_manager = FrameManager(frame_file_name, frame)
-            frames.append(frame_manager)
+            frames = self.__add_frame_manager_to_list(frames, frame, index + 1)
         print(str(self.original_video.n_frames) + ' frames extracted.')
         return frames
+    
+    def __add_frame_manager_to_list(self, frame_list, frame_to_convert_to_manager, frame_number):
+         frame_file_name = self.__get_frame_file_name(frame_number)
+         frame_manager = FrameManager(frame_file_name, frame_to_convert_to_manager)
+         frame_list.append(frame_manager)
+         return frame_list
     
     def __setup_transparent_frame_info(self):
         print('Setting up transparent versions of the frames')
         frames = []
         for original_frame_info in self.original_frames:
-            frame_manager = FrameManager(original_frame_info.get_file_name(), original_frame_info.get_frame())
-            frame_manager.remove_background_from_frame()
-            frames.append(frame_manager)
-            print('Extracted background from ' + frame_manager.get_file_name())
+            frames = self.__add_transparent_copy_of_frame_manager_to_list(frames, original_frame_info)
         return frames
+    
+    def __add_transparent_copy_of_frame_manager_to_list(self, frame_list, original_frame_manager):
+        transparent_frame_manager = FrameManager(original_frame_manager.get_file_name(), original_frame_manager.get_frame())
+        transparent_frame_manager.remove_background_from_frame()
+        frame_list.append(transparent_frame_manager)
+        print('Extracted background from ' + transparent_frame_manager.get_file_name())
+        return frame_list
     
     def __get_frame_file_name(self, current_frame_count):
         file_name = '_'
