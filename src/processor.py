@@ -11,14 +11,13 @@ class Processor:
             original_frames_directory_name=self.config_manager.get_original_frames_directory(),
             transparent_frames_directory_name=self.config_manager.get_transparent_frames_directory(),
             result_output_file_name=self.config_manager.get_output_file()
-            )
+        )
     
     def process(self):
         # TODO: Implement and test the following:
         #  1) Fix the config manager so that it sets up the paths relative to the root path
         #  2) Add an option to add a background color/image to each frame (ex: green screen instead of black screen).
         #  3) Ensure we capture all the dependencies.
-        #  4) Set up the current workspace file removal process to ignore .keep files. 
         print('Root directory: ' + ROOT_DIR)
         print('Starting the process.')
         self.project_cleaner.clean_current_workspace()
