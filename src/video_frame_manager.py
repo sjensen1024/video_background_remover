@@ -64,7 +64,7 @@ class VideoFrameManager:
         transparent_frame_manager = FrameManager(original_frame_manager.get_file_name(), original_frame_manager.get_frame())
         transparent_frame_manager.remove_background_from_frame()
         frame_list.append(transparent_frame_manager)
-        print('Extracted background from ' + transparent_frame_manager.get_file_name())
+        print('\tExtracted background from ' + transparent_frame_manager.get_file_name())
         return frame_list
     
     def __get_frame_file_name(self, current_frame_count):
