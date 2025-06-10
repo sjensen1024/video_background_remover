@@ -63,6 +63,8 @@ class VideoFrameManager:
     def __add_transparent_copy_of_frame_manager_to_list(self, frame_list, original_frame_manager):
         transparent_frame_manager = FrameManager(original_frame_manager.get_file_name(), original_frame_manager.get_frame())
         transparent_frame_manager.remove_background_from_frame()
+        # TODO: Make this use a color setup from the config manager
+        transparent_frame_manager.put_frame_over_color_background((0, 255, 0))
         frame_list.append(transparent_frame_manager)
         print('\tExtracted background from ' + transparent_frame_manager.get_file_name())
         return frame_list
