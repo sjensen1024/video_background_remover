@@ -15,9 +15,8 @@ class Processor:
     
     def process(self):
         # TODO: Implement and test the following:
-        #  1) Fix the config manager so that it sets up the paths relative to the root path
-        #  2) Add an option to add a background color/image to each frame (ex: green screen instead of black screen).
-        #  3) Ensure we capture all the dependencies.
+        #  1) Now that we have a way to save the transparent image on a color background, save the frames and write tests for it.
+        #  2) Ensure we capture all the dependencies.
         print('Root directory: ' + ROOT_DIR)
         print('Starting the process.')
         self.project_cleaner.clean_current_workspace()
