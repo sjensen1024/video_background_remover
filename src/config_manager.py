@@ -1,5 +1,4 @@
 import yaml
-import os.path
 from definitions import ROOT_DIR
 
 class ConfigManager:

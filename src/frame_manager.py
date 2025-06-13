@@ -26,9 +26,9 @@ class FrameManager:
     def remove_background_from_frame(self):
         self.frame = rembg.remove(self.frame)
 
-    def put_frame_over_color_background(self, color):
+    def put_frame_over_color_background(self, rgb_color_set):
         frame_with_alpha_channel = self.frame.convert('RGBA')
-        frame_with_color_background = PIL.Image.new('RGB', self.frame.size, color)
+        frame_with_color_background = PIL.Image.new('RGB', self.frame.size, rgb_color_set)
         frame_with_color_background.paste(frame_with_alpha_channel, (0, 0), frame_with_alpha_channel)
         self.frame = frame_with_color_background
 

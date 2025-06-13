@@ -8,6 +8,7 @@ class TestProjectCleaner(unittest.TestCase):
         self.workspace_path = ROOT_DIR + '\\tests\\support\\test_workspaces'
         self.original_frames_directory_name = 'original_frames'
         self.transparent_frames_directory_name = 'transparent_frames'
+        self.background_color_frames_directory_name = 'frames_with_background_color'
         self.result_file_name = 'result.mp4'
 
     def test_initialized_with_default_response_values(self):
@@ -35,6 +36,7 @@ class TestProjectCleaner(unittest.TestCase):
             {
                 'clean_original_frames_result': 'This directory is empty, so it does not need cleaning.',
                 'clean_transparent_frames_result': 'This directory is empty, so it does not need cleaning.',
+                'clean_background_color_frames_result': 'This directory is empty, so it does not need cleaning.',
                 'clean_result_output_result': 'This file does not exist, so it cannot be removed.'
             }
         )
@@ -48,6 +50,7 @@ class TestProjectCleaner(unittest.TestCase):
             {
                 'clean_original_frames_result': 'Successfully cleaned.',
                 'clean_transparent_frames_result': 'Successfully cleaned.',
+                'clean_background_color_frames_result': 'Successfully cleaned.',
                 'clean_result_output_result': 'Successfully cleaned.'
             }
         )
@@ -59,6 +62,7 @@ class TestProjectCleaner(unittest.TestCase):
             {
                 'clean_original_frames_result': 'Not yet run.',
                 'clean_transparent_frames_result': 'Not yet run.',
+                'clean_background_color_frames_result': 'Not yet run.',
                 'clean_result_output_result': 'Not yet run.'
             }
         )
@@ -69,6 +73,7 @@ class TestProjectCleaner(unittest.TestCase):
             {
                 'clean_original_frames_result': 'This directory does not exist, so it cannot be cleaned.',
                 'clean_transparent_frames_result': 'This directory does not exist, so it cannot be cleaned.',
+                'clean_background_color_frames_result': 'This directory does not exist, so it cannot be cleaned.',
                 'clean_result_output_result': 'This file does not exist, so it cannot be removed.'
             }
         )
@@ -77,6 +82,7 @@ class TestProjectCleaner(unittest.TestCase):
         return ProjectCleaner(
             original_frames_directory_name = self.workspace_path + '\\' + subdirectory_name + '\\' + self.original_frames_directory_name,
             transparent_frames_directory_name = self.workspace_path + '\\' + subdirectory_name + '\\' + self.transparent_frames_directory_name,
+            background_color_frames_directory_name = self.workspace_path + '\\' + subdirectory_name + '\\' + self.background_color_frames_directory_name,
             result_output_file_name = self.workspace_path + '\\' + subdirectory_name + '\\result.mp4'
         )
 
@@ -88,8 +94,11 @@ class TestProjectCleaner(unittest.TestCase):
         has_files_and_directories_workspace_path = self.workspace_path + '\\has_files_and_directories'
         original_frames_path = has_files_and_directories_workspace_path + '\\' + self.original_frames_directory_name
         transparent_frames_path = has_files_and_directories_workspace_path + '\\' + self.transparent_frames_directory_name
+        background_color_frames_path = has_files_and_directories_workspace_path + '\\' + self.background_color_frames_directory_name
         shutil.copy(video_path, has_files_and_directories_workspace_path)
         shutil.copy(image_1_path, original_frames_path)
         shutil.copy(image_2_path, original_frames_path)
         shutil.copy(image_1_path, transparent_frames_path)
         shutil.copy(image_2_path, transparent_frames_path)
+        shutil.copy(image_1_path, background_color_frames_path)
+        shutil.copy(image_2_path, background_color_frames_path)
