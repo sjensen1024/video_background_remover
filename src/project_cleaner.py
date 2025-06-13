@@ -1,12 +1,14 @@
 import os
 
 class ProjectCleaner:
-    def __init__(self, original_frames_directory_name = '', transparent_frames_directory_name = '', result_output_file_name = ''):
+    def __init__(self, original_frames_directory_name = '', transparent_frames_directory_name = '', background_color_frames_directory_name = '', result_output_file_name = ''):
         self.original_frames_directory_name = original_frames_directory_name
         self.transparent_frames_directory_name = transparent_frames_directory_name
+        self.background_color_frames_directory_name = background_color_frames_directory_name
         self.result_output_file_name = result_output_file_name
         self.clean_original_frames_result = self.__status_messages().get('new')
         self.clean_transparent_frames_result = self.__status_messages().get('new')
+        self.clean_background_color_frames_result = self.__status_messages().get('new')
         self.clean_result_output_result = self.__status_messages().get('new')
 
     def clean_current_workspace(self):
@@ -17,6 +19,9 @@ class ProjectCleaner:
         self.__print_process_start_output_for_path(self.transparent_frames_directory_name)
         self.__clean_transparent_frames_directory()
         self.__print_process_result_output_for_path('clean_transparent_frames_result')
+        self.__print_process_start_output_for_path(self.background_color_frames_directory_name)
+        self.__clean_background_color_frames_directory()
+        self.__print_process_result_output_for_path('clean_background_color_frames_result')
         self.__print_process_start_output_for_path(self.result_output_file_name)
         self.__clean_result_output()
         self.__print_process_result_output_for_path('clean_result_output_result')
@@ -26,6 +31,7 @@ class ProjectCleaner:
         return {
             'clean_original_frames_result': self.clean_original_frames_result,
             'clean_transparent_frames_result': self.clean_transparent_frames_result,
+            'clean_background_color_frames_result': self.clean_background_color_frames_result,
             'clean_result_output_result': self.clean_result_output_result
         }
     
@@ -49,6 +55,9 @@ class ProjectCleaner:
 
     def __clean_transparent_frames_directory(self):
         self.__clean_all_pngs_in_directory(self.transparent_frames_directory_name)
+
+    def __clean_background_color_frames_directory(self):
+        self.__clean_all_pngs_in_directory(self.background_color_frames_directory_name)
 
     def __clean_result_output(self):
         if not os.path.exists(self.result_output_file_name):
@@ -75,7 +84,10 @@ class ProjectCleaner:
         if directory == self.original_frames_directory_name:
             self.clean_original_frames_result = result_message
             return
-        self.clean_transparent_frames_result = result_message
+        if directory == self.transparent_frames_directory_name:
+            self.clean_transparent_frames_result = result_message
+            return
+        self.clean_background_color_frames_result = result_message
 
     def __delete_file_from_directory(self, file_name, directory):
         file_path = os.path.join(directory, file_name)

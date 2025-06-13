@@ -172,3 +172,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Ignore .png frames or the result video when using the default workspace setup
+current_workspace/original_frames/*.png
+current_workspace/transparent_frames/*.png
+current_workspace/frames_with_background_color/*.png
+current_workspace/result.mp4
