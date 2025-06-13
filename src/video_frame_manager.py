@@ -37,12 +37,12 @@ class VideoFrameManager:
 
     def save_result_video_from_background_color_frames(self, result_video_path):
         print('Processing image sequence.')
-        transparent_sequence = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(
+        frame_sequence = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(
             list(map(lambda i: numpy.array(i.get_frame()), self.frames_with_background_color)), 
             int(self.original_video.fps)
         )
         print('Creating video from image sequence.')
-        transparent_sequence.write_videofile(result_video_path)
+        frame_sequence.write_videofile(result_video_path)
 
     def __save_frames(self, frame_directory_path, frames):
         [frame.save_frame(frame_directory_path) for frame in frames]
