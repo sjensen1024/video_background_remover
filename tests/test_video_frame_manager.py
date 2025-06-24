@@ -35,6 +35,7 @@ class TestVideoFrameManager(unittest.TestCase):
 
     def __run_test_suite_for_video(self, video, expected_file_names_in_sets):
         video_frame_manager = VideoFrameManager(video, (0,0,0))
+        video_frame_manager.setup_frames()
         self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
         self.__assert_set_contains_frame_managers_with_expected_file_names(
             video_frame_manager.get_original_frames(),  
