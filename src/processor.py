@@ -15,9 +15,6 @@ class Processor:
         )
     
     def process(self):
-        # TODO: 
-        # 1) Ensure we capture all the dependencies.
-        # 2) Add instructions to the readme.
         print('Root directory: ' + ROOT_DIR)
         print('Starting the process.')
         self.project_cleaner.clean_current_workspace()
