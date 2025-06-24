@@ -6,9 +6,9 @@ class VideoFrameManager:
     def __init__(self, original_video, background_color_set):
         self.original_video = original_video
         self.background_color_set = background_color_set
-        self.original_frames = self.__extract_original_frame_info()
-        self.transparent_frames = self. __setup_transparent_frame_info()
-        self.frames_with_background_color = self.__setup_frame_with_background_color_info()
+        self.original_frames = []
+        self.transparent_frames = []
+        self.frames_with_background_color = []
         self.result_video = None
     
     def get_original_video(self):
@@ -25,6 +25,11 @@ class VideoFrameManager:
     
     def get_result_video(self):
         return self.result_video
+    
+    def setup_frames(self):
+        self.original_frames = self.__extract_original_frame_info()
+        self.transparent_frames = self. __setup_transparent_frame_info()
+        self.frames_with_background_color = self.__setup_frame_with_background_color_info()
     
     def save_original_frames(self, frame_directory_path):
         self.__save_frames(frame_directory_path, self.original_frames)
