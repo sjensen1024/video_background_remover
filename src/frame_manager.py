@@ -5,7 +5,7 @@ import numpy
 class FrameManager:
     def __init__(self, file_name, frame):
         self.file_name = file_name
-        self.frame = self.__get_frame_as_image(frame)
+        self.frame = self._get_frame_as_image(frame)
         self.is_saved = False
 
     def get_file_name(self):
@@ -32,7 +32,7 @@ class FrameManager:
         frame_with_color_background.paste(frame_with_alpha_channel, (0, 0), frame_with_alpha_channel)
         self.frame = frame_with_color_background
 
-    def __get_frame_as_image(self, frame):
+    def _get_frame_as_image(self, frame):
         if isinstance(frame, PIL.Image.Image):
             return frame
         return PIL.Image.fromarray(numpy.uint8(frame))    
