@@ -11,21 +11,6 @@ class VideoFrameManager:
         self.frames_with_background_color = self._setup_frame_with_background_color_info()
         self.result_video = None
     
-    def get_original_video(self):
-        return self.original_video
-    
-    def get_original_frames(self):
-        return self.original_frames
-    
-    def get_transparent_frames(self):
-        return self.transparent_frames
-    
-    def get_frames_with_background_color(self):
-        return self.frames_with_background_color
-    
-    def get_result_video(self):
-        return self.result_video
-    
     def save_original_frames(self, frame_directory_path):
         self._save_frames(frame_directory_path, self.original_frames)
 

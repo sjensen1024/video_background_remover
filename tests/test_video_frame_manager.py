@@ -37,31 +37,31 @@ class TestVideoFrameManager(unittest.TestCase):
         video_frame_manager = VideoFrameManager(video, (0,0,0))
         self.__assert_original_video_is_instance_of_correct_class(video_frame_manager)
         self.__assert_set_contains_frame_managers_with_expected_file_names(
-            video_frame_manager.get_original_frames(),  
+            video_frame_manager.original_frames,  
             expected_file_names_in_sets
         )
         self.__assert_set_contains_frame_managers_with_expected_file_names(
-            video_frame_manager.get_transparent_frames(),  
+            video_frame_manager.transparent_frames,  
             expected_file_names_in_sets
         )
         self.__assert_set_contains_frame_managers_with_expected_file_names(
-            video_frame_manager.get_frames_with_background_color(),
+            video_frame_manager.frames_with_background_color,
             expected_file_names_in_sets
         )
-        self.__assert_method_was_called_for_frames_in_set(FrameManager.remove_background_from_frame, video_frame_manager.get_transparent_frames())
-        self.assertIsNone(video_frame_manager.get_result_video())
+        self.__assert_method_was_called_for_frames_in_set(FrameManager.remove_background_from_frame, video_frame_manager.transparent_frames)
+        self.assertIsNone(video_frame_manager.result_video)
         video_frame_manager.save_original_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\original_frames')
-        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.get_original_frames())
+        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.original_frames)
         FrameManager.save_frame.call_count = 0
         video_frame_manager.save_transparent_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\transparent_frames')
-        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.get_transparent_frames())
+        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.transparent_frames)
         FrameManager.save_frame.call_count = 0
         video_frame_manager.save_background_color_frames(ROOT_DIR + '\\tests\\support\\test_workspaces\\frames_with_background_color')
-        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.get_frames_with_background_color())
+        self.__assert_method_was_called_for_frames_in_set(FrameManager.save_frame, video_frame_manager.frames_with_background_color)
         self.__assert_correct_calls_are_made_in_save_result_video_from_background_color_frames(video_frame_manager)
 
     def __assert_original_video_is_instance_of_correct_class(self, video_frame_manager):
-        self.assertIsInstance(video_frame_manager.get_original_video(), moviepy.video.io.VideoFileClip.VideoFileClip)
+        self.assertIsInstance(video_frame_manager.original_video, moviepy.video.io.VideoFileClip.VideoFileClip)
 
     def __assert_set_contains_frame_managers_with_expected_file_names(self, set_to_check, expected_file_names):
         for index, file_name in enumerate(expected_file_names):
