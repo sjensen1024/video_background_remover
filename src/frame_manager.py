@@ -7,15 +7,6 @@ class FrameManager:
         self.file_name = file_name
         self.frame = self._get_frame_as_image(frame)
         self.is_saved = False
-
-    def get_file_name(self):
-        return self.file_name
-    
-    def get_frame(self):
-        return self.frame
-    
-    def get_is_saved(self):
-        return self.is_saved
     
     def save_frame(self, directory):
         file_path = directory + '\\' + self.file_name

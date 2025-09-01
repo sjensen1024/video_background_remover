@@ -67,7 +67,7 @@ class TestVideoFrameManager(unittest.TestCase):
         for index, file_name in enumerate(expected_file_names):
             element_in_set = set_to_check[index]
             self.assertIsInstance(element_in_set, FrameManager)
-            self.assertEqual(element_in_set.get_file_name(), file_name)
+            self.assertEqual(element_in_set.file_name, file_name)
 
     def __assert_method_was_called_for_frames_in_set(self, method_called, frame_set):
         self.assertEqual(method_called.call_count, len(frame_set))

@@ -38,7 +38,7 @@ class VideoFrameManager:
     def save_result_video_from_background_color_frames(self, result_video_path):
         print('Processing image sequence.')
         frame_sequence = moviepy.video.io.ImageSequenceClip.ImageSequenceClip(
-            list(map(lambda i: numpy.array(i.get_frame()), self.frames_with_background_color)), 
+            list(map(lambda i: numpy.array(i.frame), self.frames_with_background_color)), 
             int(self.original_video.fps)
         )
         print('Creating video from image sequence.')
@@ -76,17 +76,17 @@ class VideoFrameManager:
         return frames
     
     def __add_transparent_copy_of_frame_manager_to_list(self, frame_list, original_frame_manager):
-        transparent_frame_manager = FrameManager(original_frame_manager.get_file_name(), original_frame_manager.get_frame())
+        transparent_frame_manager = FrameManager(original_frame_manager.file_name, original_frame_manager.frame)
         transparent_frame_manager.remove_background_from_frame()
         frame_list.append(transparent_frame_manager)
-        print('\tExtracted background from ' + transparent_frame_manager.get_file_name())
+        print('\tExtracted background from ' + transparent_frame_manager.file_name)
         return frame_list
     
     def __add_background_color_copy_of_frame_manager_to_list(self, frame_list, transparent_frame_manager):
-        background_color_frame_manager = FrameManager(transparent_frame_manager.get_file_name(), transparent_frame_manager.get_frame())
+        background_color_frame_manager = FrameManager(transparent_frame_manager.file_name, transparent_frame_manager.frame)
         background_color_frame_manager.put_frame_over_color_background(self.background_color_set)
         frame_list.append(background_color_frame_manager)
-        print('\tAdded color to background for ' + background_color_frame_manager.get_file_name())
+        print('\tAdded color to background for ' + background_color_frame_manager.file_name)
         return frame_list
     
     def __get_frame_file_name(self, current_frame_count):
