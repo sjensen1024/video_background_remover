@@ -13,15 +13,15 @@ class TestFrameManager(unittest.TestCase):
         self.frame_manager = FrameManager(self.sample_file_name, self.sample_frame)
 
     def test_new_frame_manager_has_correct_setup(self):
-        self.assertEqual(self.frame_manager.get_file_name(), self.sample_file_name)
-        self.assertTrue(isinstance(self.frame_manager.get_frame(), PIL.Image.Image))
-        self.assertFalse(self.frame_manager.get_is_saved())
+        self.assertEqual(self.frame_manager.file_name, self.sample_file_name)
+        self.assertTrue(isinstance(self.frame_manager.frame, PIL.Image.Image))
+        self.assertFalse(self.frame_manager.is_saved)
 
     def test_save_changes_is_saved_attribute(self):
         original_image_save = PIL.Image.Image.save
         PIL.Image.Image.save = MagicMock(name='mock_image_save')
         self.frame_manager.save_frame(ROOT_DIR + '\\support\\test_workspaces\\has_files_and_directories\\original_frames')
-        self.assertTrue(self.frame_manager.get_is_saved())
+        self.assertTrue(self.frame_manager.is_saved)
         PIL.Image.Image.save = original_image_save
 
     def test_rembg_remove_is_called_on_remove_background_from_frame(self):
