@@ -24,11 +24,11 @@ class Processor:
         source_video = moviepy.VideoFileClip(self.config_manager.get_input_file())
         background_color_set = self.config_manager.get_background_color_rgb()
         video_frame_manager = VideoFrameManager(source_video, background_color_set)
-        if self.config_manager.get_should_save_original_frames():
+        if self.config_manager.should_save_original_frames():
             video_frame_manager.save_original_frames(self.config_manager.get_original_frames_directory())
-        if self.config_manager.get_should_save_transparent_frames():
+        if self.config_manager.should_save_transparent_frames():
             video_frame_manager.save_transparent_frames(self.config_manager.get_transparent_frames_directory())
-        if self.config_manager.get_should_save_frames_with_background_color():
+        if self.config_manager.should_save_frames_with_background_color():
             video_frame_manager.save_background_color_frames(self.config_manager.get_frames_with_background_color_directory())
         video_frame_manager.save_result_video_from_background_color_frames(self.config_manager.get_output_file())
         print('Process finished!')

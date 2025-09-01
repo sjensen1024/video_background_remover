@@ -25,21 +25,21 @@ class TestConfigManager(unittest.TestCase):
 
     def test_when_configured_to_save_original_transparent_and_background_color_frames(self):
         config_manager_with_all_true = ConfigManager(config_yaml_path = self.test_config_directory + 'default_config.yml')
-        self.assertTrue(config_manager_with_all_true.get_should_save_original_frames())
-        self.assertTrue(config_manager_with_all_true.get_should_save_transparent_frames())
-        self.assertTrue(config_manager_with_all_true.get_should_save_frames_with_background_color())
+        self.assertTrue(config_manager_with_all_true.should_save_original_frames)
+        self.assertTrue(config_manager_with_all_true.should_save_transparent_frames)
+        self.assertTrue(config_manager_with_all_true.should_save_frames_with_background_color)
 
     def test_when_configured_not_to_save_any_frames(self):
         config_manager_with_all_false = ConfigManager(config_yaml_path = self.test_config_directory + 'config_with_all_booleans_false.yml')
-        self.assertFalse(config_manager_with_all_false.get_should_save_original_frames())
-        self.assertFalse(config_manager_with_all_false.get_should_save_transparent_frames())
-        self.assertFalse(config_manager_with_all_false.get_should_save_frames_with_background_color())
+        self.assertFalse(config_manager_with_all_false.should_save_original_frames)
+        self.assertFalse(config_manager_with_all_false.should_save_transparent_frames)
+        self.assertFalse(config_manager_with_all_false.should_save_frames_with_background_color)
     
     def test_when_configured_to_only_save_frames_with_background_color(self):
         config_manager_with_mixed_booleans = ConfigManager(config_yaml_path = self.test_config_directory + 'config_with_mixed_booleans.yml')
-        self.assertFalse(config_manager_with_mixed_booleans.get_should_save_original_frames())
-        self.assertFalse(config_manager_with_mixed_booleans.get_should_save_transparent_frames())
-        self.assertTrue(config_manager_with_mixed_booleans.get_should_save_frames_with_background_color())
+        self.assertFalse(config_manager_with_mixed_booleans.should_save_original_frames)
+        self.assertFalse(config_manager_with_mixed_booleans.should_save_transparent_frames)
+        self.assertTrue(config_manager_with_mixed_booleans.should_save_frames_with_background_color)
     
     def test_when_background_color_is_set_to_black(self):
         config_manager_black_background = ConfigManager(config_yaml_path = self.test_config_directory + 'default_config.yml')

@@ -19,32 +19,23 @@ class ConfigManager:
 
 
     def get_original_frames_directory(self):
-        return self.__make_relative_to_root_path(self.original_frames_directory)
+        return self._make_relative_to_root_path(self.original_frames_directory)
     
     def get_transparent_frames_directory(self):
-        return self.__make_relative_to_root_path(self.transparent_frames_directory)
+        return self._make_relative_to_root_path(self.transparent_frames_directory)
     
     def get_frames_with_background_color_directory(self):
-        return self.__make_relative_to_root_path(self.frames_with_background_color_directory)
+        return self._make_relative_to_root_path(self.frames_with_background_color_directory)
     
     def get_input_file(self):
-        return self.__make_relative_to_root_path(self.input_file)
+        return self._make_relative_to_root_path(self.input_file)
     
     def get_output_file(self):
-        return self.__make_relative_to_root_path(self.output_file)
-    
-    def get_should_save_original_frames(self):
-        return self.should_save_original_frames
-    
-    def get_should_save_transparent_frames(self):
-        return self.should_save_transparent_frames
-    
-    def get_should_save_frames_with_background_color(self):
-        return self.should_save_frames_with_background_color
+        return self._make_relative_to_root_path(self.output_file)
     
     def get_background_color_rgb(self):
         return (self.background_color_red_amount, self.background_color_green_amount, self.background_color_blue_amount)
     
-    def __make_relative_to_root_path(self, path):
+    def _make_relative_to_root_path(self, path):
         return ROOT_DIR + '\\' + path
     
