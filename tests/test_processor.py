@@ -13,9 +13,13 @@ class TestProcessor(unittest.TestCase):
         self.original_processor_config_manager = self.processor.config_manager
         self.original_project_cleaner_clean_current_workspace = ProjectCleaner.clean_current_workspace
         ProjectCleaner.clean_current_workspace = MagicMock(name='test_processor_clean_current_workspace_mock')
-        self.original_video_frame_manager_setup_frames = VideoFrameManager.setup_frames
-        VideoFrameManager.setup_frames = MagicMock(name='test_processor_video_frame_manager_setup_frames_mock')
         self.original_video_frame_manager_save_original_frames = VideoFrameManager.save_original_frames
+        self.original_video_frame_manager_extract_original_frame_info = VideoFrameManager._extract_original_frame_info
+        VideoFrameManager._extract_original_frame_info = MagicMock(name='test_processor_video_frame_manager_extract_original_frame_info')
+        self.original_video_frame_manager_setup_transparent_frame_info = VideoFrameManager._setup_transparent_frame_info
+        VideoFrameManager._setup_transparent_frame_info = MagicMock(name='test_processor_video_frame_manager_setup_transparent_frame_info')
+        self.original_video_frame_manager_setup_frame_with_background_color_info = VideoFrameManager._setup_frame_with_background_color_info
+        VideoFrameManager._setup_frame_with_background_color_info = MagicMock(name='test_processor_video_frame_manager_setup_frame_with_background_color_info')
         VideoFrameManager.save_original_frames = MagicMock(name='test_processor_video_frame_manager_save_original_frames_mock')
         self.original_video_frame_manager_save_transparent_frames = VideoFrameManager.save_transparent_frames
         VideoFrameManager.save_transparent_frames = MagicMock(name='test_processor_video_frame_manager_save_transparent_frames_mock')
@@ -27,7 +31,9 @@ class TestProcessor(unittest.TestCase):
     def tearDown(self):
         self.processor.config_manager = self.original_processor_config_manager
         ProjectCleaner.clean_current_workspace = self.original_project_cleaner_clean_current_workspace 
-        VideoFrameManager.setup_frames = self.original_video_frame_manager_setup_frames
+        VideoFrameManager._extract_original_frame_info = self.original_video_frame_manager_extract_original_frame_info
+        VideoFrameManager._setup_transparent_frame_info = self.original_video_frame_manager_setup_transparent_frame_info
+        VideoFrameManager._setup_frame_with_background_color_info = self.original_video_frame_manager_setup_frame_with_background_color_info
         VideoFrameManager.save_original_frames = self.original_video_frame_manager_save_original_frames
         VideoFrameManager.save_transparent_frames = self.original_video_frame_manager_save_transparent_frames
         VideoFrameManager.save_background_color_frames = self.original_video_frame_manager_save_background_color_frames
@@ -37,7 +43,6 @@ class TestProcessor(unittest.TestCase):
         self.processor.config_manager = ConfigManager(config_yaml_path=self.test_config_directory + 'test_processor_config_booleans_true.yml')
         self.processor.process()
         ProjectCleaner.clean_current_workspace.assert_called()
-        VideoFrameManager.setup_frames.assert_called()
         VideoFrameManager.save_original_frames.assert_called()
         VideoFrameManager.save_transparent_frames.assert_called()
         VideoFrameManager.save_background_color_frames.assert_called()
@@ -47,7 +52,6 @@ class TestProcessor(unittest.TestCase):
         self.processor.config_manager = ConfigManager(config_yaml_path=self.test_config_directory + 'test_processor_config_booleans_false.yml')
         self.processor.process()
         ProjectCleaner.clean_current_workspace.assert_called()
-        VideoFrameManager.setup_frames.assert_called()
         VideoFrameManager.save_original_frames.assert_not_called()
         VideoFrameManager.save_transparent_frames.assert_not_called()
         VideoFrameManager.save_background_color_frames.assert_not_called()
