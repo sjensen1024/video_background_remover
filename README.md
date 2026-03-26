@@ -46,7 +46,8 @@ It does this mainly using moviepy and rembg.
 ### How to run the program
 - Ensure there is an input file for your project to read from (see configuration above).
 - Navigate to the root project directory in a terminal and run `python .`
-- That's it. The video background remover should do its thing and save a result MP4 with the background replaced with a solid color.
+- The program will start to extract the frames. When it removes the background from the frame, it should open the result in an image preview. The program will ask you if you want to use the frame and prompt you for an answer or yes, no, or yes to all.
+- After going through all the frames, the program should save a result MP4 with the background replaced with a solid color.
 
 ### Important things to note about usage
 - There's no "make it magically work" feature.

@@ -4,6 +4,7 @@ from src.frame_manager import FrameManager
 
 class VideoFrameManager:
     def __init__(self, original_video, background_color_set):
+        self.yes_to_all = False
         self.original_video = original_video
         self.background_color_set = background_color_set
         self.original_frames = self._extract_original_frame_info()
@@ -63,8 +64,27 @@ class VideoFrameManager:
     def _add_transparent_copy_of_frame_manager_to_list(self, frame_list, original_frame_manager):
         transparent_frame_manager = FrameManager(original_frame_manager.file_name, original_frame_manager.frame)
         transparent_frame_manager.remove_background_from_frame()
-        frame_list.append(transparent_frame_manager)
-        print('\tExtracted background from ' + transparent_frame_manager.file_name)
+        
+        if not self.yes_to_all:
+            # Show preview and ask for confirmation
+            print(f'\nProcessed background removal for {transparent_frame_manager.file_name}')
+            response = self._get_frame_confirmation(transparent_frame_manager)
+            
+            if response == 'all':
+                self.yes_to_all = True
+                frame_list.append(transparent_frame_manager)
+                print(f'\t✓ Accepted frame {transparent_frame_manager.file_name} (yes to all enabled)')
+            elif response:
+                frame_list.append(transparent_frame_manager)
+                print(f'\t✓ Accepted frame {transparent_frame_manager.file_name}')
+            else:
+                print(f'\t✗ Rejected frame {transparent_frame_manager.file_name} - retrying')
+                # Recursively retry with the same original frame
+                frame_list = self._add_transparent_copy_of_frame_manager_to_list(frame_list, original_frame_manager)
+        else:
+            frame_list.append(transparent_frame_manager)
+            print(f'\tExtracted background from {transparent_frame_manager.file_name} (yes to all)')
+        
         return frame_list
     
     def _add_background_color_copy_of_frame_manager_to_list(self, frame_list, transparent_frame_manager):
@@ -73,6 +93,28 @@ class VideoFrameManager:
         frame_list.append(background_color_frame_manager)
         print('\tAdded color to background for ' + background_color_frame_manager.file_name)
         return frame_list
+    
+    def _get_frame_confirmation(self, frame_manager):
+        """
+        Display the frame and ask the user if they want to use it.
+        Returns True for yes, False for no, 'all' for yes to all.
+        """
+        try:
+            frame_manager.preview_frame()
+        except Exception as e:
+            print(f'\t\tWarning: Could not display frame preview: {e}')
+        
+        while True:
+            response = input('\tUse this frame? (yes/no/all): ').strip().lower()
+            
+            if response in ['yes', 'y']:
+                return True
+            elif response in ['no', 'n']:
+                return False
+            elif response in ['all', 'a']:
+                return 'all'
+            else:
+                print('\tPlease enter "yes" (y), "no" (n), or "all" (a)')
     
     def _get_frame_file_name(self, current_frame_count):
         file_name = '_'
