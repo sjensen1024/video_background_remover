@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 import moviepy
 import PIL
 import rembg
@@ -40,4 +40,10 @@ class TestFrameManager(unittest.TestCase):
         PIL.Image.Image.convert.assert_called()
         PIL.Image.Image.paste.assert_called()
         PIL.Image.Image.paste = original_image_paste
-        PIL.Image.Image.convert = original_image_convert 
+        PIL.Image.Image.convert = original_image_convert
+
+    @patch('subprocess.Popen')
+    def test_preview_frame_opens_image_with_subprocess(self, mock_popen):
+        """Test that preview_frame calls subprocess.Popen without actually opening an image."""
+        self.frame_manager.preview_frame()
+        mock_popen.assert_called_once()

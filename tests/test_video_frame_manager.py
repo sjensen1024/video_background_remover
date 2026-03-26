@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 import moviepy
 from src.video_frame_manager import VideoFrameManager
 from src.frame_manager import FrameManager
@@ -11,19 +11,26 @@ class TestVideoFrameManager(unittest.TestCase):
        self.original_save_frame_call = FrameManager.save_frame
        self.original_remove_background_from_frame_call = FrameManager.remove_background_from_frame
        self.original_put_frame_over_color_background_call = FrameManager.put_frame_over_color_background
+       self.original_preview_frame_call = FrameManager.preview_frame
        self.original_image_sequence_clip_call = moviepy.video.io.ImageSequenceClip.ImageSequenceClip
        FrameManager.save_frame = MagicMock(name='mock_frame_manager_save_frame')
        FrameManager.remove_background_from_frame = MagicMock(name='mock_frame_manager_remove_background_from_frame')
        FrameManager.put_frame_over_color_background = MagicMock(name='mock_frame_manager_put_frame_over_color_background')
+       FrameManager.preview_frame = MagicMock(name='mock_frame_manager_preview_frame')
        moviepy.video.io.ImageSequenceClip.ImageSequenceClip = MagicMock(name='mock_image_sequence_clip')
        self.mocked_image_sequence_clip = MockedImageSequenceClip()
        moviepy.video.io.ImageSequenceClip.ImageSequenceClip.return_value = self.mocked_image_sequence_clip
+       # Mock input to return 'yes' by default (tests can override this)
+       self.input_patcher = patch('builtins.input', return_value='yes')
+       self.mock_input = self.input_patcher.start()
 
     def tearDown(self):
         FrameManager.save_frame = self.original_save_frame_call
         FrameManager.remove_background_from_frame = self.original_remove_background_from_frame_call
         FrameManager.put_frame_over_color_background = self.original_put_frame_over_color_background_call
+        FrameManager.preview_frame = self.original_preview_frame_call
         moviepy.video.io.ImageSequenceClip.ImageSequenceClip = self.original_image_sequence_clip_call
+        self.input_patcher.stop()
 
     def test_suite_for_video_with_single_digit_number_of_frames(self):
         video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
@@ -117,4 +124,85 @@ class TestVideoFrameManager(unittest.TestCase):
                     '_24.png',
                     '_25.png'
                 ]
+
+
+class TestFrameConfirmation(unittest.TestCase):
+    """Tests for frame preview and confirmation functionality."""
     
+    def setUp(self):
+        self.original_preview_frame_call = FrameManager.preview_frame
+        FrameManager.preview_frame = MagicMock(name='mock_frame_manager_preview_frame')
+
+    def tearDown(self):
+        FrameManager.preview_frame = self.original_preview_frame_call
+
+    @patch('builtins.input', return_value='yes')
+    def test_get_frame_confirmation_returns_true_for_yes(self, mock_input):
+        """Test that user entering 'yes' returns True."""
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager.__new__(VideoFrameManager)
+        video_frame_manager.yes_to_all = False
+        frame_manager = FrameManager('test.png', video.get_frame(1))
+        result = video_frame_manager._get_frame_confirmation(frame_manager)
+        self.assertTrue(result)
+
+    @patch('builtins.input', return_value='no')
+    def test_get_frame_confirmation_returns_false_for_no(self, mock_input):
+        """Test that user entering 'no' returns False."""
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager.__new__(VideoFrameManager)
+        video_frame_manager.yes_to_all = False
+        frame_manager = FrameManager('test.png', video.get_frame(1))
+        result = video_frame_manager._get_frame_confirmation(frame_manager)
+        self.assertFalse(result)
+
+    @patch('builtins.input', return_value='all')
+    def test_get_frame_confirmation_returns_all_for_all(self, mock_input):
+        """Test that user entering 'all' returns 'all'."""
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager.__new__(VideoFrameManager)
+        video_frame_manager.yes_to_all = False
+        frame_manager = FrameManager('test.png', video.get_frame(1))
+        result = video_frame_manager._get_frame_confirmation(frame_manager)
+        self.assertEqual(result, 'all')
+
+    @patch('builtins.input', return_value='y')
+    def test_get_frame_confirmation_accepts_y_shorthand(self, mock_input):
+        """Test that user entering 'y' is accepted as yes."""
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager.__new__(VideoFrameManager)
+        video_frame_manager.yes_to_all = False
+        frame_manager = FrameManager('test.png', video.get_frame(1))
+        result = video_frame_manager._get_frame_confirmation(frame_manager)
+        self.assertTrue(result)
+
+    @patch('builtins.input', return_value='n')
+    def test_get_frame_confirmation_accepts_n_shorthand(self, mock_input):
+        """Test that user entering 'n' is accepted as no."""
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager.__new__(VideoFrameManager)
+        video_frame_manager.yes_to_all = False
+        frame_manager = FrameManager('test.png', video.get_frame(1))
+        result = video_frame_manager._get_frame_confirmation(frame_manager)
+        self.assertFalse(result)
+
+    @patch('builtins.input', return_value='a')
+    def test_get_frame_confirmation_accepts_a_shorthand(self, mock_input):
+        """Test that user entering 'a' is accepted as all."""
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager.__new__(VideoFrameManager)
+        video_frame_manager.yes_to_all = False
+        frame_manager = FrameManager('test.png', video.get_frame(1))
+        result = video_frame_manager._get_frame_confirmation(frame_manager)
+        self.assertEqual(result, 'all')
+
+    @patch('builtins.input', side_effect=['invalid', 'yes'])
+    def test_get_frame_confirmation_retries_on_invalid_input(self, mock_input):
+        """Test that invalid input prompts user to try again."""
+        video = moviepy.VideoFileClip(ROOT_DIR + '\\tests\\support\\media\\videos\\single_digit_frame_video.mp4')
+        video_frame_manager = VideoFrameManager.__new__(VideoFrameManager)
+        video_frame_manager.yes_to_all = False
+        frame_manager = FrameManager('test.png', video.get_frame(1))
+        result = video_frame_manager._get_frame_confirmation(frame_manager)
+        self.assertTrue(result)
+        self.assertEqual(mock_input.call_count, 2)

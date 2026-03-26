@@ -1,6 +1,10 @@
 import PIL
 import rembg
 import numpy
+import subprocess
+import platform
+import tempfile
+import os
 
 class FrameManager:
     def __init__(self, file_name, frame):
@@ -23,7 +27,24 @@ class FrameManager:
         frame_with_color_background.paste(frame_with_alpha_channel, (0, 0), frame_with_alpha_channel)
         self.frame = frame_with_color_background
 
+    def preview_frame(self):
+        """Display the frame in the default image viewer."""
+        try:
+            # Create a temporary file for the preview
+            with tempfile.NamedTemporaryFile(suffix='.png', delete=False) as tmp_file:
+                self.frame.save(tmp_file.name)
+            
+            # Open with system viewer
+            if platform.system() == 'Darwin':  # macOS
+                subprocess.Popen(['open', tmp_file.name])
+            elif platform.system() == 'Windows':
+                subprocess.Popen(['start', tmp_file.name], shell=True)
+            else:  # Linux
+                subprocess.Popen(['xdg-open', tmp_file.name])
+        except Exception as e:
+            print(f'\t\tWarning: Could not display frame preview: {e}')
+
     def _get_frame_as_image(self, frame):
         if isinstance(frame, PIL.Image.Image):
             return frame
-        return PIL.Image.fromarray(numpy.uint8(frame))    
+        return PIL.Image.fromarray(numpy.uint8(frame))        
